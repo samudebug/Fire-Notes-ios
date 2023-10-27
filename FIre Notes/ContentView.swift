@@ -6,19 +6,21 @@
 //
 
 import SwiftUI
-
+import FirebaseAuth
 struct ContentView: View {
+    @EnvironmentObject var authHelper: AuthHelper
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationView {
+            if authHelper.isSignedin {
+                NotesList()
+            } else {
+                LoginPage()
+            }
         }
         .padding()
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView().environmentObject(NotesHelper()).environmentObject(StorageHelper()).environmentObject(AuthHelper())
 }
