@@ -35,13 +35,20 @@ struct NoteEditor: View {
             TextField("Titulo", text: $title)
             MarkupEditorView(markupDelegate: self,html: $text, id: Date().ISO8601Format())
         }.toolbar {
-            PhotosPicker( selection: $imageSelected,
-                                matching: .images,
-                          photoLibrary: .shared()){
-                Image(systemName: "plus")
-            }.onChange(of: imageSelected, initial: true) {
-                if let imageSelected {
-                    _ = handleImage(from: imageSelected)
+            if id != "new" {
+                Button {
+                    guard let user = Auth.auth().currentUser?.uid else {
+                        print("User not logged in")
+                        return
+                    }
+                    let result = notesHelper.deleteNote(note: Note(id: id, title: title, content: content, uid: user))
+                    if result {
+                        dismiss()
+                    } else {
+                        showError = true
+                    }
+                } label: {
+                    Image(systemName: "trash")
                 }
             }
             Button {
@@ -68,9 +75,18 @@ struct NoteEditor: View {
             } label: {
                 Image(systemName: "square.and.arrow.down")
             }
+            PhotosPicker( selection: $imageSelected,
+                                matching: .images,
+                          photoLibrary: .shared()){
+                Image(systemName: "plus")
+            }.onChange(of: imageSelected, initial: true) {
+                if let imageSelected {
+                    _ = handleImage(from: imageSelected)
+                }
+            }
         }.alert("An error has ocurred", isPresented: $showError) {
             Button("OK", role: .cancel) { showError = false }
-        }.scrollDismissesKeyboard(.interactively)
+        }
     }
     private func handleImage(from imageSelection: PhotosPickerItem) -> Progress {
         return imageSelection.loadTransferable(type: Data.self) {

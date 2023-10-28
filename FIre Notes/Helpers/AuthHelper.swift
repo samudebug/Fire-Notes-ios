@@ -6,13 +6,15 @@
 //
 
 import Foundation
-import Firebase
+import FirebaseAuth
 import GoogleSignIn
+import FirebaseCore
 
 class AuthHelper: ObservableObject {
     @Published var isSignedin: Bool = false
     
     init() {
+        self.isSignedin = Auth.auth().currentUser != nil
         Auth.auth().addStateDidChangeListener {
             auth, user in
             if user != nil {

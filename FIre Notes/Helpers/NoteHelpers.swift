@@ -23,7 +23,6 @@ final class NotesHelper: ObservableObject {
                     print("Error fetching documents: ")
                 } else {
                     self.notes = querySnapshot!.documents.map {
-                        print("Converting document")
                         do {
                             return try $0.data(as: Note.self)
                         } catch {

@@ -37,16 +37,17 @@ struct NotesList: View {
                 notesHelper.fetchNotes()
             }
         }.toolbar {
-            NavigationLink {
-                NoteEditor()
-            } label: {
-                Image(systemName: "plus")
-            }
             Button {
                 authHelper.signOut()
             } label: {
                 Image(systemName: "rectangle.portrait.and.arrow.forward")
             }
+            NavigationLink {
+                NoteEditor()
+            } label: {
+                Image(systemName: "plus")
+            }
+            
         }
     }
 }
